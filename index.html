@@ -28,12 +28,31 @@
 
 <body>
 <script>
-const proxyurl = "https://cors-anywhere.herokuapp.com/";
-const url = "https://query2.finance.yahoo.com/v8/finance/chart/A?formatted=true&crumb=&lang=en-US&region=US&period1=1118568991&period2=1608868503&interval=1d&events=div%7Csplit&corsDomain=finance.yahoo.com"; // site that doesn’t send Access-Control-*
-fetch(proxyurl + url) // https://cors-anywhere.herokuapp.com/https://example.com
-.then(response => response.json())
-.then(contents => console.log(contents))
-.catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+
+     const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    const urls = "https://query2.finance.yahoo.com/v8/finance/chart/A?formatted=true&crumb=&lang=en-US&region=US&period1=1118568991&period2=1608868503&interval=1d&events=div%7Csplit&corsDomain=finance.yahoo.com";
+    $.ajax({            
+    url: proxyurl + urls,
+    dataType: "json",
+    success: function(result){                     
+      var yahoo_data = result;
+      let length_tm = yahoo_data.chart.result[0].timestamp.length;
+      var date_arr = new Array();
+      var price_arr = new Array();
+      var as1_data = new Array();
+      for(i=0; i<length_tm; i++) {
+        var dt = new Date(yahoo_data.chart.result[0].timestamp[i] * 1000);
+        var pr = yahoo_data.chart.result[0].indicators.adjclose[0].adjclose[i];
+        date_arr.push(dt);
+        price_arr.push(pr);        
+      }
+      as1_data.push({date: date_arr, price: price_arr});
+      console.log(as1_data);        
+    
+        }
+      }) 
+    } 
+    
 </script>
 
 </body>
